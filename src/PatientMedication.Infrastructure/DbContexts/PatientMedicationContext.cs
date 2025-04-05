@@ -69,6 +69,22 @@ public partial class PatientMedicationContext : DbContext
                 .IsUnicode(true);
         });
 
+        modelBuilder.Entity<MedicationCodeSystem>(entity =>
+        {
+            entity.HasKey(e => e.MedicationCodeSystemId).HasName("PK_MedicationCodeSystem");
+
+            entity.ToTable("MedicationCodeSystem", "medication");
+
+            entity.Property(e => e.Code)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+
+            entity.HasData(new[]
+            {
+                new MedicationCodeSystem(1, "SNOMED"),
+            });
+        });
+
         OnModelCreatingPartial(modelBuilder);
     }
 

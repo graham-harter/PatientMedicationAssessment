@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PatientMedication.Infrastructure.DbContexts;
 
@@ -11,9 +12,11 @@ using PatientMedication.Infrastructure.DbContexts;
 namespace PatientMedication.Infrastructure.Migrations
 {
     [DbContext(typeof(PatientMedicationContext))]
-    partial class PatientMedicationContextModelSnapshot : ModelSnapshot
+    [Migration("20250405210444_20250405-002-Add-MedicationCodeSystem-table")]
+    partial class _20250405002AddMedicationCodeSystemtable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
