@@ -49,6 +49,26 @@ public partial class PatientMedicationContext : DbContext
                 .IsFixedLength();
         });
 
+        modelBuilder.HasSequence("NextClinicianReference", "clinicians")
+            .StartsAt(100000000001L)
+            .HasMin(100000000001L)
+            .HasMax(999999999999L);
+
+        modelBuilder.Entity<Clinician>(entity =>
+        {
+            entity.HasKey(e => e.ClinicianId).HasName("PK_Clinician");
+
+            entity.ToTable("Clinician", "clinicians");
+
+            entity.Property(e => e.FirstName)
+                .HasMaxLength(50)
+                .IsUnicode(true);
+
+            entity.Property(e => e.Surname)
+                .HasMaxLength(50)
+                .IsUnicode(true);
+        });
+
         OnModelCreatingPartial(modelBuilder);
     }
 
