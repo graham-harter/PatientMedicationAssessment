@@ -85,6 +85,21 @@ public partial class PatientMedicationContext : DbContext
             });
         });
 
+        modelBuilder.Entity<Medication>(entity =>
+        {
+            entity.HasKey(e => e.MedicationId).HasName("PK_Medication");
+
+            entity.ToTable("Medication", "medication");
+
+            entity.Property(e => e.Code)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+
+            entity.Property(e => e.CodeName)
+                .HasMaxLength(100)
+                .IsUnicode(true);
+        });
+
         OnModelCreatingPartial(modelBuilder);
     }
 
