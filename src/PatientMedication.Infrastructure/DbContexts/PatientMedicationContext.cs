@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection.Metadata;
 using Microsoft.EntityFrameworkCore;
 using PatientMedication.Infrastructure.Models;
 
@@ -118,6 +119,45 @@ public partial class PatientMedicationContext : DbContext
                 new MedicationRequestStatus(4, "Completed"),
             });
         });
+
+        modelBuilder.Entity<MedicationRequest>(entity =>
+        {
+            entity.HasKey(e => e.MedicationRequestId).HasName("PK_MedicationRequest");
+
+            entity.ToTable("MedicationRequest", "medication");
+
+            entity.Property(e => e.MedicationReference)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+
+            entity.Property(e => e.ReasonText)
+                .HasMaxLength(4000)
+            .IsUnicode(true);
+        });
+
+        modelBuilder.Entity<Patient>()
+            .HasMany<MedicationRequest>()
+            .WithOne(e => e.Patient)
+            .HasForeignKey(e => e.PatientReference)
+            .HasPrincipalKey(e => e.PatientReference)
+            //.IsRequired();
+            ;
+
+        modelBuilder.Entity<Clinician>()
+            .HasMany<MedicationRequest>()
+            .WithOne(e => e.Clinician)
+            .HasForeignKey(e => e.ClinicianReference)
+            .HasPrincipalKey(e => e.ClinicianReference)
+            //.IsRequired();
+            ;
+
+        modelBuilder.Entity<Medication>()
+            .HasMany<MedicationRequest>()
+            .WithOne(e => e.Medication)
+            .HasForeignKey(e => e.MedicationReference)
+            .HasPrincipalKey(e => e.Code)
+            //.IsRequired();
+            ;
 
         OnModelCreatingPartial(modelBuilder);
     }
