@@ -100,6 +100,25 @@ public partial class PatientMedicationContext : DbContext
                 .IsUnicode(true);
         });
 
+        modelBuilder.Entity<MedicationRequestStatus>(entity =>
+        {
+            entity.HasKey(e => e.MedicationRequestStatusId).HasName("PK_MedicationRequestStatus");
+
+            entity.ToTable("MedicationRequestStatus", "medication");
+
+            entity.Property(e => e.Description)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+
+            entity.HasData(new[]
+            {
+                new MedicationRequestStatus(1, "Active"),
+                new MedicationRequestStatus(2, "On hold"),
+                new MedicationRequestStatus(3, "Cancelled"),
+                new MedicationRequestStatus(4, "Completed"),
+            });
+        });
+
         OnModelCreatingPartial(modelBuilder);
     }
 
