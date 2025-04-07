@@ -6,15 +6,15 @@ using PatientMedication.Infrastructure.Factories.Interfaces;
 namespace PatientMedication.Infrastructure.Factories
 {
     /// <summary>
-    /// Class responsible for creating instances of <see cref="PatientMedicationFactory"/>.
+    /// Class responsible for creating instances of <see cref="PatientMedicationContextFactory"/>.
     /// </summary>
-    internal sealed class PatientMedicationFactory : IPatientMedicationContextFactory
+    internal sealed class PatientMedicationContextFactory : IPatientMedicationContextFactory
     {
         private readonly IPatientMedicationContextConfigurer _configurer;
 
         #region Constructor(s)
 
-        public PatientMedicationFactory(
+        public PatientMedicationContextFactory(
             IPatientMedicationContextConfigurer configurer)
         {
             // Validate argument(s).

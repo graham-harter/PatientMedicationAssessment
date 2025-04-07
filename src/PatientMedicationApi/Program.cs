@@ -56,7 +56,7 @@ public class Program
         services.AddSingleton<IPatientMedicationContextConfigurer>(patientMedicationContextConfigurer);
 
         // Register the PatientMedicationContextFactory class.
-        var patientMedicationContextFactory = new PatientMedicationFactory(patientMedicationContextConfigurer);
+        var patientMedicationContextFactory = new PatientMedicationContextFactory(patientMedicationContextConfigurer);
         services.AddSingleton<IPatientMedicationContextFactory>(patientMedicationContextFactory);
 
         // Register application classes.
