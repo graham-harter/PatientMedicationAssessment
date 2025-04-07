@@ -10,6 +10,9 @@
 		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
 			<_Parameter1>PatientMedicationApi</_Parameter1>
 		</AssemblyAttribute>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+			<_Parameter1>PatientMedication.Application.Tests</_Parameter1>
+		</AssemblyAttribute>
 	</ItemGroup>
 	
   <ItemGroup>

@@ -30,6 +30,15 @@ This is used to update the specified mediation request. The following properties
 Any properties not specified in the request will be left with their existing values.
 
 
+============
+Unit tests
+============
+
+There is a small unit test project in the solution, written using MSTest and Moq.
+To run the unit tests, rebuild the solution and then right-click in Solution Explorer, either on the solution, or on the test project,
+and choose "Run Tests" in the context menu.
+
+
 ===========================
 Notes on implementation:—
 ===========================
