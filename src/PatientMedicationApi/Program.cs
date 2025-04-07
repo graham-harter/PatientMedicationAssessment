@@ -62,6 +62,7 @@ public class Program
         // Register application classes.
         services.AddTransient<IMedicationRequestCreator, MedicationRequestCreator>();
         services.AddTransient<IMedicationRequestRetrieverByFilterCriteria, MedicationRequestRetrieverByFilterCriteria>();
+        services.AddTransient<IMedicationRequestUpdater, MedicationRequestUpdater>();
 
         // Register DbContexts.
         services.AddScoped<PatientMedicationContext>(serviceProvider =>

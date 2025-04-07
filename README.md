@@ -9,6 +9,7 @@ The API has the following endpoints:-
 
 This is used to create new medication requests.
 
+
 [GET] /PatientMedication
 
 Retrieve a list of medication requests by some or all of the following filter criteria:-
@@ -17,6 +18,16 @@ Retrieve a list of medication requests by some or all of the following filter cr
  - Finish date at which the medication was prescribed. If the start prescription date has been specified, this value must also be specified.
  
 It is also considered an error to specify no filter criteria.
+
+
+[PATCH] /PatientMedication/{medicationRequestId:int}
+
+This is used to update the specified mediation request. The following properties can be updated:-
+ - EndDate
+ - FrequencyNumberOfTimes and FrequencyUnit (Note: These values must be specified together, or neither be specified.)
+ - Status
+
+Any properties not specified in the request will be left with their existing values.
 
 
 ===========================
@@ -62,3 +73,7 @@ This should be improved to apply the filter criteria server-side for efficient q
 ** (4.) **
 Non-clustered indices should also be added to the columns queried by the filter criteria, namely:-
  - [medication].[MedicationRequest].[PrescribedDate]
+
+** (5.) **
+On the CreateMedicationRequest(...) and UpdateMedicationRequest(...) API endpoints, there is no valdation as yet
+to ensure that the EndDate, if specified, is equal to or later than the StartDate.

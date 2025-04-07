@@ -14,6 +14,7 @@ namespace PatientMedicationApi.Controllers
     {
         private readonly IMedicationRequestCreator _medicationRequestCreator;
         private readonly IMedicationRequestRetrieverByFilterCriteria _medicationRequestRetrieverByFilterCriteria;
+        private readonly IMedicationRequestUpdater _medicationRequestUpdater;
         private readonly ILogger<PatientMedicationController> _logger;
 
         #region Constructor(s)
@@ -21,16 +22,19 @@ namespace PatientMedicationApi.Controllers
         public PatientMedicationController(
             IMedicationRequestCreator medicationRequestCreator,
             IMedicationRequestRetrieverByFilterCriteria medicationRequestRetrieverByFilterCriteria,
+            IMedicationRequestUpdater medicationRequestUpdater,
             ILogger<PatientMedicationController> logger)
         {
             // Validate argument(s).
             if (medicationRequestCreator is null) throw new ArgumentNullException(nameof(medicationRequestCreator));
             if (medicationRequestRetrieverByFilterCriteria is null) throw new ArgumentNullException(nameof(medicationRequestRetrieverByFilterCriteria));
+            if (medicationRequestUpdater is null) throw new ArgumentNullException(nameof(medicationRequestUpdater));
             if (logger is null) throw new ArgumentNullException(nameof(logger));
 
             // Make these arguments available to the object.
             _medicationRequestCreator = medicationRequestCreator;
             _medicationRequestRetrieverByFilterCriteria = medicationRequestRetrieverByFilterCriteria;
+            _medicationRequestUpdater = medicationRequestUpdater;
             _logger = logger;
         }
 
@@ -40,7 +44,7 @@ namespace PatientMedicationApi.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateMedicationRequest(
             [FromBody, Required] CreateMedicationRequest request)
         {
@@ -129,6 +133,59 @@ namespace PatientMedicationApi.Controllers
                 throw;
             }
 
+        }
+
+        [HttpPatch("{medicationRequestId:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateMedicationRequest(
+            [FromRoute, Required] int medicationRequestId,
+            [FromBody, Required] UpdateMedicationRequest request)
+        {
+            // Validate arguments.
+            if (request is null) throw new ArgumentNullException(nameof(request));
+            if (request.FrequencyNumberOfTimes.HasValue != (!string.IsNullOrWhiteSpace(request.FrequencyUnit)))
+            {
+                throw new ArgumentException(
+                    $"Either the {nameof(request.FrequencyNumberOfTimes)} and {nameof(request.FrequencyUnit)} arguments should be specified, or neither should be specified",
+                    nameof(request.FrequencyUnit));
+            }
+
+            try
+            {
+                _logger
+                    .LogDebug("Received request to update medication request. Request is: {Request}", request);
+
+                await _medicationRequestUpdater.Update(medicationRequestId, request);
+
+                _logger
+                    .LogInformation("Successfully updated medication request with Id {Id} from request {Request}",
+                    medicationRequestId,
+                    request);
+
+                return new OkResult();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                _logger.LogError(
+                    ex,
+                    "An exception occurred when attempting to update the medication request with Id {Id}. Request was: {Request}",
+                    medicationRequestId,
+                    request);
+
+                return new NotFoundResult();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                    ex,
+                    "An exception occurred when attempting to update the medication request with Id {Id}. Request was: {Request}",
+                    medicationRequestId,
+                    request);
+
+                throw;
+            }
         }
 
         #endregion // #region Public methods
