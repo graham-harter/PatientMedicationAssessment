@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Reflection.Metadata;
 using Microsoft.EntityFrameworkCore;
+using PatientMedication.Infrastructure.Configuration.Interfaces;
 using PatientMedication.Infrastructure.Models;
 
 namespace PatientMedication.Infrastructure.DbContexts;
 
 public partial class PatientMedicationContext : DbContext
 {
+    private readonly IPatientMedicationContextConfigurer? _configurer;
+
     public PatientMedicationContext()
     {
     }
@@ -16,12 +19,34 @@ public partial class PatientMedicationContext : DbContext
     {
     }
 
+    public PatientMedicationContext(
+        IPatientMedicationContextConfigurer configurer)
+    {
+        // Validate argument(s).
+        if (configurer is null) throw new ArgumentNullException(nameof(configurer));
+
+        // Make these arguments available to the object.
+        _configurer = configurer;
+    }
+
     public virtual DbSet<Patient> Patients { get; set; }
 
-    /*
+    public virtual DbSet<Clinician> Clinicians { get; set; }
+
+    public virtual DbSet<Medication> Medications { get; set; }
+
+    public virtual DbSet<MedicationRequestStatus> MedicationRequestStatuses { get; set; }
+
+    public virtual DbSet<MedicationRequest> MedicationRequests { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer();
-    */
+    {
+        // If we have been provided with an IPatientMedicationContextConfigurer instance, use it now.
+        if (_configurer is not null && !optionsBuilder.IsConfigured)
+        {
+            _configurer.ConfigureDbContext(optionsBuilder);
+        }
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -140,7 +165,6 @@ public partial class PatientMedicationContext : DbContext
             .WithOne(e => e.Patient)
             .HasForeignKey(e => e.PatientReference)
             .HasPrincipalKey(e => e.PatientReference)
-            //.IsRequired();
             ;
 
         modelBuilder.Entity<Clinician>()
@@ -148,7 +172,6 @@ public partial class PatientMedicationContext : DbContext
             .WithOne(e => e.Clinician)
             .HasForeignKey(e => e.ClinicianReference)
             .HasPrincipalKey(e => e.ClinicianReference)
-            //.IsRequired();
             ;
 
         modelBuilder.Entity<Medication>()
@@ -156,7 +179,6 @@ public partial class PatientMedicationContext : DbContext
             .WithOne(e => e.Medication)
             .HasForeignKey(e => e.MedicationReference)
             .HasPrincipalKey(e => e.Code)
-            //.IsRequired();
             ;
 
         OnModelCreatingPartial(modelBuilder);

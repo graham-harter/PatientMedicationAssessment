@@ -10,6 +10,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatientMedication.Infrastructure", "src\PatientMedication.Infrastructure\PatientMedication.Infrastructure.csproj", "{0F26DD4D-A96E-43B4-B032-3EFBDC4BDDC4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{ADBED71A-DFEE-4F43-B5A7-F6DC9DC5C940}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatientMedication.Application", "src\PatientMedication.Application\PatientMedication.Application.csproj", "{1F8B886D-1C5D-42E6-A524-2C117344D249}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +28,10 @@ Global
 		{0F26DD4D-A96E-43B4-B032-3EFBDC4BDDC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F26DD4D-A96E-43B4-B032-3EFBDC4BDDC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F26DD4D-A96E-43B4-B032-3EFBDC4BDDC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F8B886D-1C5D-42E6-A524-2C117344D249}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F8B886D-1C5D-42E6-A524-2C117344D249}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F8B886D-1C5D-42E6-A524-2C117344D249}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F8B886D-1C5D-42E6-A524-2C117344D249}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -31,6 +39,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{58B0492F-8A9C-4E48-A182-2A3486FD935B} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{0F26DD4D-A96E-43B4-B032-3EFBDC4BDDC4} = {E63D18ED-4977-47DC-9B84-F2539E871ED9}
+		{1F8B886D-1C5D-42E6-A524-2C117344D249} = {ADBED71A-DFEE-4F43-B5A7-F6DC9DC5C940}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1DEAE818-7830-4B05-BF5E-49005AEEAC28}

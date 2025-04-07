@@ -1,13 +1,15 @@
 using System;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using PatientMedication.Infrastructure;
+using PatientMedication.Application;
+using PatientMedication.Application.Interfaces;
 using PatientMedication.Infrastructure.Configuration;
 using PatientMedication.Infrastructure.Configuration.Interfaces;
 using PatientMedication.Infrastructure.ConnectionFactories;
 using PatientMedication.Infrastructure.ConnectionFactories.Interfaces;
 using PatientMedication.Infrastructure.DbContexts;
+using PatientMedication.Infrastructure.Factories;
+using PatientMedication.Infrastructure.Factories.Interfaces;
 
 namespace PatientMedicationApi;
 
@@ -47,10 +49,22 @@ public class Program
         // Register database connection factories.
         RegisterConnectionFactories(services, patientMedicationConnectionString);
 
-        services.AddDbContext<PatientMedicationContext>(options =>
-            options.UseSqlServer(
-                patientMedicationConnectionString.Get(),
-                builder => builder.MigrationsAssembly("PatientMedication.Infrastructure")));
+        // Create the object used for configuring the PatientMedicationContext.
+        var patientMedicationContextConfigurer = CreatePatientMedicationContextConfigurer(patientMedicationConnectionString);
+
+        // Register the object used for configuring the PatientMedicationContext.
+        services.AddSingleton<IPatientMedicationContextConfigurer>(patientMedicationContextConfigurer);
+
+        // Register the PatientMedicationContextFactory class.
+        var patientMedicationContextFactory = new PatientMedicationFactory(patientMedicationContextConfigurer);
+        services.AddSingleton<IPatientMedicationContextFactory>(patientMedicationContextFactory);
+
+        // Register application classes.
+        services.AddTransient<IMedicationRequestCreator, MedicationRequestCreator>();
+
+        // Register DbContexts.
+        services.AddScoped<PatientMedicationContext>(serviceProvider =>
+            new PatientMedicationContext(patientMedicationContextConfigurer));
 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -125,6 +139,13 @@ public class Program
     {
         var patientMedicationConnectionFactory = new PatientMedicationConnectionFactory(patientMedicationConnectionString);
         services.AddSingleton<IPatientMedicationConnectionFactory>(patientMedicationConnectionFactory);
+    }
+
+    private static IPatientMedicationContextConfigurer CreatePatientMedicationContextConfigurer(
+        IPatientMedicationConnectionString patientMedicationConnectionString)
+    {
+        var configurer = new PatientMedicationContextConfigurer(patientMedicationConnectionString);
+        return configurer;
     }
 
     #endregion // #region Private methods

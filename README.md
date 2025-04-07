@@ -1,5 +1,14 @@
 # PatientMedicationAssessment
 
+To run this application, ensure that PatientMedicationApi is set to be the startup project.
+Run using option "https" in Visual Studio. (Execution within Dockerfile container has not yet been made to work. Exercise still to do.)
+
+The API has the following endpoints:-
+
+[POST] /PatientMedication
+
+This is used to create new medication requests.
+
 
 ===========================
 Notes on implementation:—
