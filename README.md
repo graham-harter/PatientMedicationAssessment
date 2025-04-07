@@ -9,6 +9,15 @@ The API has the following endpoints:-
 
 This is used to create new medication requests.
 
+[GET] /PatientMedication
+
+Retrieve a list of medication requests by some or all of the following filter criteria:-
+ - Medication request status description. If specified, this must match (case-insensitively) a valid medication request status description.
+ - Start date at which the medication was prescribed. If the finish prescription date has been specified, this value must also be specified.
+ - Finish date at which the medication was prescribed. If the start prescription date has been specified, this value must also be specified.
+ 
+It is also considered an error to specify no filter criteria.
+
 
 ===========================
 Notes on implementation:—
@@ -45,3 +54,11 @@ CREATE TABLE [medication].[MedicationRequest](
 The intention was for [FrequencyUnitId] to be a foreign key to a reference data table, [medication].[FrequencyUnit] containing the possible frequency units
 such as "daily", "weekly", "fortnightly", "monthly". This has been left as an exercise still to do. For now, the API will just write zeroes into these fields,
 since there is no primary key table for this column to refer to.
+
+** (3.) **
+Currently the GetMedicationRequests(...) API endpoint is applying the filter criteria client-side, not server-side.
+This should be improved to apply the filter criteria server-side for efficient querying.
+
+** (4.) **
+Non-clustered indices should also be added to the columns queried by the filter criteria, namely:-
+ - [medication].[MedicationRequest].[PrescribedDate]
